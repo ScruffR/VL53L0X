@@ -1,7 +1,6 @@
 {
 	"name": "VL53L0X",
-	"author": "Pololu <inbox@pololu.com>
-",
+	"author": "Pololu <inbox@pololu.com> ",
 	"version": "0.0.1",
 	"license": "GNU-LGPL",
 	"description": "This is a library for VL53L0X distance sensor"
