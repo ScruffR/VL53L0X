@@ -1,8 +1,8 @@
 {
 	"name": "VL53L0X",
 	"author": "Pololu <inbox@pololu.com>
- / ParticlePort: ScruffR",
+",
 	"version": "0.0.1",
-	"license": "GNU LGPL",
-	"description": "This is a library for the Arduino IDE that helps interface with ST's VL53L0X distance sensor"
+	"license": "GNU-LGPL",
+	"description": "This is a library for VL53L0X distance sensor"
 }
