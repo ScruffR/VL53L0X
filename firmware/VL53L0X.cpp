@@ -981,7 +981,7 @@ uint16_t VL53L0X::decodeTimeout(uint32_t reg_val)
 // is always uint32_t with uint16_t values only.
 uint16_t VL53L0X::encodeTimeout(uint32_t timeout_mclks)
 {
-  if (reg_val > 0xFFFF) reg_val = 0xFFFF;
+  if (timeout_mclks > 0xFFFF) timeout_mclks = 0xFFFF;
 
   // format: "(LSByte * 2^MSByte) + 1"
   uint32_t ls_byte = 0;
