@@ -154,9 +154,9 @@ class VL53L0X
     };
 
     uint8_t address;
-    uint16_t io_timeout;
+    uint32_t io_timeout;
     bool did_timeout;
-    uint16_t timeout_start_ms;
+    uint32_t timeout_start_ms;
 
     uint8_t stop_variable; // read by init and used when starting measurement; is StopVariable field of VL53L0X_DevData_t structure in API
     uint32_t measurement_timing_budget_us;
@@ -168,9 +168,9 @@ class VL53L0X
 
     bool performSingleRefCalibration(uint8_t vhv_init_byte);
 
-    static uint16_t decodeTimeout(uint16_t value);
-    static uint16_t encodeTimeout(uint16_t timeout_mclks);
-    static uint32_t timeoutMclksToMicroseconds(uint16_t timeout_period_mclks, uint8_t vcsel_period_pclks);
+    static uint16_t decodeTimeout(uint32_t value);
+    static uint16_t encodeTimeout(uint32_t timeout_mclks);
+    static uint32_t timeoutMclksToMicroseconds(uint32_t timeout_period_mclks, uint8_t vcsel_period_pclks);
     static uint32_t timeoutMicrosecondsToMclks(uint32_t timeout_period_us, uint8_t vcsel_period_pclks);
 };
 

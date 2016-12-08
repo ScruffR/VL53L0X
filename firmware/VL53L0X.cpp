@@ -18,7 +18,7 @@
 #define startTimeout() (timeout_start_ms = millis())
 
 // Check if timeout is enabled (set to nonzero value) and has expired
-#define checkTimeoutExpired() (io_timeout > 0 && ((uint16_t)millis() - timeout_start_ms) > io_timeout)
+#define checkTimeoutExpired() (io_timeout > 0 && (millis() - timeout_start_ms) > io_timeout)
 
 // Decode VCSEL (vertical cavity surface emitting laser) pulse period in PCLKs
 // from register value
@@ -488,7 +488,7 @@ bool VL53L0X::setMeasurementTimingBudget(uint32_t budget_us)
     //  timeouts must be expressed in macro periods MClks
     //  because they have different vcsel periods."
 
-    uint16_t final_range_timeout_mclks =
+    uint32_t final_range_timeout_mclks =
       timeoutMicrosecondsToMclks(final_range_timeout_us,
                                  timeouts.final_range_vcsel_period_pclks);
 
@@ -622,7 +622,7 @@ bool VL53L0X::setVcselPulsePeriod(vcselPeriodType type, uint8_t period_pclks)
     // set_sequence_step_timeout() begin
     // (SequenceStepId == VL53L0X_SEQUENCESTEP_PRE_RANGE)
 
-    uint16_t new_pre_range_timeout_mclks =
+    uint32_t new_pre_range_timeout_mclks =
       timeoutMicrosecondsToMclks(timeouts.pre_range_us, period_pclks);
 
     writeReg16Bit(PRE_RANGE_CONFIG_TIMEOUT_MACROP_HI,
@@ -633,7 +633,7 @@ bool VL53L0X::setVcselPulsePeriod(vcselPeriodType type, uint8_t period_pclks)
     // set_sequence_step_timeout() begin
     // (SequenceStepId == VL53L0X_SEQUENCESTEP_MSRC)
 
-    uint16_t new_msrc_timeout_mclks =
+    uint32_t new_msrc_timeout_mclks =
       timeoutMicrosecondsToMclks(timeouts.msrc_dss_tcc_us, period_pclks);
 
     writeReg(MSRC_CONFIG_TIMEOUT_MACROP,
@@ -703,7 +703,7 @@ bool VL53L0X::setVcselPulsePeriod(vcselPeriodType type, uint8_t period_pclks)
     //  timeouts must be expressed in macro periods MClks
     //  because they have different vcsel periods."
 
-    uint16_t new_final_range_timeout_mclks =
+    uint32_t new_final_range_timeout_mclks =
       timeoutMicrosecondsToMclks(timeouts.final_range_us, period_pclks);
 
     if (enables.pre_range)
@@ -967,8 +967,9 @@ void VL53L0X::getSequenceStepTimeouts(SequenceStepEnables const * enables, Seque
 // based on VL53L0X_decode_timeout()
 // Note: the original function returned a uint32_t, but the return value is
 // always stored in a uint16_t.
-uint16_t VL53L0X::decodeTimeout(uint16_t reg_val)
+uint16_t VL53L0X::decodeTimeout(uint32_t reg_val)
 {
+  if (reg_val > 0xFFFF) reg_val = 0xFFFF;
   // format: "(LSByte * 2^MSByte) + 1"
   return (uint16_t)((reg_val & 0x00FF) <<
          (uint16_t)((reg_val & 0xFF00) >> 8)) + 1;
@@ -977,11 +978,12 @@ uint16_t VL53L0X::decodeTimeout(uint16_t reg_val)
 // Encode sequence step timeout register value from timeout in MCLKs
 // based on VL53L0X_encode_timeout()
 // Note: the original function took a uint16_t, but the argument passed to it
-// is always a uint16_t.
-uint16_t VL53L0X::encodeTimeout(uint16_t timeout_mclks)
+// is always uint32_t with uint16_t values only.
+uint16_t VL53L0X::encodeTimeout(uint32_t timeout_mclks)
 {
-  // format: "(LSByte * 2^MSByte) + 1"
+  if (reg_val > 0xFFFF) reg_val = 0xFFFF;
 
+  // format: "(LSByte * 2^MSByte) + 1"
   uint32_t ls_byte = 0;
   uint16_t ms_byte = 0;
 
@@ -1002,7 +1004,7 @@ uint16_t VL53L0X::encodeTimeout(uint16_t timeout_mclks)
 
 // Convert sequence step timeout from MCLKs to microseconds with given VCSEL period in PCLKs
 // based on VL53L0X_calc_timeout_us()
-uint32_t VL53L0X::timeoutMclksToMicroseconds(uint16_t timeout_period_mclks, uint8_t vcsel_period_pclks)
+uint32_t VL53L0X::timeoutMclksToMicroseconds(uint32_t timeout_period_mclks, uint8_t vcsel_period_pclks)
 {
   uint32_t macro_period_ns = calcMacroPeriod(vcsel_period_pclks);
 
