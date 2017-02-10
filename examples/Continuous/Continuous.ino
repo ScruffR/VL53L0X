@@ -4,17 +4,11 @@ range measurements with the VL53L0X. It is based on
 vl53l0x_ContinuousRanging_Example.c from the VL53L0X API.
 
 The range readings are in units of mm. */
-#define _PARTICLE_BUILD_IDE_
-#if defined(_PARTICLE_BUILD_IDE_)
-#  include "VL53L0X/VL53L0X.h"
-#else
-#  include "VL53L0X.h"
-#endif
+#include "VL53L0X.h"
 
 #if !defined(PARTICLE)
 #  include <Wire.h>
 #endif
-
 
 VL53L0X sensor;
 

@@ -8,15 +8,9 @@
 
  The range readings are in units of mm. */
 
-#define _PARTICLE_BUILD_IDE_
-#if defined(_PARTICLE_BUILD_IDE_)
-#  include "VL53L0X/VL53L0X.h"
-#else
-#  include "VL53L0X.h"
-#endif
+#include "VL53L0X.h"
 
 VL53L0X sensor;
-
 
 // Uncomment this line to use long range mode. This
 // increases the sensitivity of the sensor and extends its
@@ -27,14 +21,12 @@ VL53L0X sensor;
 
 //#define LONG_RANGE
 
-
 // Uncomment ONE of these two lines to get
 // - higher speed at the cost of lower accuracy OR
 // - higher accuracy at the cost of lower speed
 
 //#define HIGH_SPEED
 //#define HIGH_ACCURACY
-
 
 void setup()
 {
