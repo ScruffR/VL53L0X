@@ -67,7 +67,7 @@ bool VL53L0X::init(bool io_2v8)
   if (io_2v8)
   {
     writeReg(VHV_CONFIG_PAD_SCL_SDA__EXTSUP_HV,
-      readReg(VHV_CONFIG_PAD_SCL_SDA__EXTSUP_HV) | 0x01); // set bit 0
+    readReg(VHV_CONFIG_PAD_SCL_SDA__EXTSUP_HV) | 0x01); // set bit 0
   }
 
   // "Set I2C standard mode"
